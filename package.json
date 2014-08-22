@@ -1,0 +1,30 @@
+{
+	"author": {
+		"name": "Marko Heijnen",
+		"email": "info@markoheijnen.com",
+		"url": "http://markoheijnen.com"
+	},
+	"name": "WordPress-Utils",
+	"description": "Handles basic WordPress functionality",
+	"version": "0.1.0",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/markoheijnen/node-wordpress-utils.git"
+	},
+	"keywords": [
+		"WordPress"
+	],
+	"main": "index.js",
+	"dependencies": {
+		"cookie": "0.1.2",
+		"MD5": "1.2.1"
+	},
+	"optionalDependencies": {},
+	"engines": {
+		"node": "*"
+	},
+	"bugs": {
+		"url": "https://github.com/markoheijnen/node-wordpress-utils/issues"
+	},
+	"homepage": "https://github.com/markoheijnen/node-wordpress-utils"
+}
