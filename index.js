@@ -23,6 +23,7 @@ var wordpress = {
 
 		var cookies = cookie.parse( cookie_data );
 
+		// The authentication cookie isn't set
 		if ( ! cookies[ 'wordpress_logged_in_' + this.cookie_hash ] ) {
 			return false;
 		}
@@ -30,6 +31,7 @@ var wordpress = {
 		// 'username', 'expiration', 'token', 'hmac', 'scheme'
 		parts = cookies[ 'wordpress_logged_in_' + this.cookie_hash ].split( '|' );
 
+		// Quick check to see if an honest cookie has expired
 		if ( parts[1] < ( Date.now() / 1000 ) ) {
 			return false;
 		}
@@ -38,6 +40,7 @@ var wordpress = {
 		expiration = parts[1];
 
 		return logged_in = true;
+
 	},
 
 	is_user_logged_in: function () {
