@@ -4,7 +4,11 @@ var cookie = require("cookie"),
 var wordpress = {
 	siteurl: '',
 	cookie_hash: '',
+
+	// Internal
 	logged_in: false,
+	username: false,
+	expiration: false,
 
 	set_siteurl: function ( siteurl ) {
 		this.siteurl = siteurl;
@@ -29,6 +33,8 @@ var wordpress = {
 			return false;
 		}
 
+		username   = parts[0];
+		expiration = parts[1];
 	},
 
 	is_user_logged_in: function () {
