@@ -29,7 +29,6 @@ var wordpress = {
 			return false;
 		}
 
-		console.log( parts );
 	},
 
 	is_user_logged_in: function () {
