@@ -16,7 +16,8 @@ var wordpress = {
 	},
 
 	parse_cookie: function ( cookie_data ) {
-		if ( ! this.siteurl ) {
+		// Site url and cookie hash need to be set
+		if ( ! this.siteurl || ! this.cookie_hash ) {
 			return false;
 		}
 
