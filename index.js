@@ -35,6 +35,8 @@ var wordpress = {
 
 		username   = parts[0];
 		expiration = parts[1];
+
+		return logged_in = true;
 	},
 
 	is_user_logged_in: function () {
