@@ -4,6 +4,7 @@ var cookie = require("cookie"),
 var wordpress = {
 	siteurl: '',
 	cookie_hash: '',
+	connector: require('./lib/wp-api.js'),
 
 	// Internal
 	logged_in: false,
@@ -33,6 +34,10 @@ var wordpress = {
 
 		// Quick check to see if an honest cookie has expired
 		if ( parts[1] < ( Date.now() / 1000 ) ) {
+			return false;
+		}
+
+		if( ! this.connector.parse_cookie( cookies ) ) {
 			return false;
 		}
 
