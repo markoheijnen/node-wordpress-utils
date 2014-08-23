@@ -13,7 +13,8 @@ var wordpress = {
 
 	set_siteurl: function ( siteurl ) {
 		this.siteurl = siteurl;
-		this.cookie_hash = md5( this.siteurl );
+		this.cookie_hash = md5( siteurl );
+		this.connector.set_siteurl( siteurl );
 	},
 
 	connect: function( cookie_data, token ) {
@@ -24,7 +25,7 @@ var wordpress = {
 		}
 
 		// Some magic happens here
-		if( ! this.connector.parse_cookie( cookie_data ) ) {
+		if( ! this.connector.connect( cookie_data, token ) ) {
 			return false;
 		}
 
@@ -57,6 +58,8 @@ var wordpress = {
 		}
 
 		return {
+			hashkey: 'wordpress_logged_in_' + this.cookie_hash,
+			hash: cookies[ 'wordpress_logged_in_' + this.cookie_hash ],
 			username: parts[0],
 			expiration: parts[1],
 			token: parts[2],
