@@ -16,6 +16,25 @@ var wordpress = {
 		this.cookie_hash = md5( this.siteurl );
 	},
 
+	connect: function( cookie_data, token ) {
+		var cookie_data = this.parse_cookie( cookie_data );
+
+		if ( ! cookie_data ) {
+			return false;
+		}
+
+		// Some magic happens here
+		if( ! this.connector.parse_cookie( cookie_data ) ) {
+			return false;
+		}
+
+		this.username   = cookie_data.username;
+		this.expiration = cookie_data.expiration;
+		this.logged_in  = true;
+
+		return true;
+	},
+
 	parse_cookie: function ( cookie_data ) {
 		// Site url and cookie hash need to be set
 		if ( ! this.siteurl || ! this.cookie_hash ) {
@@ -29,7 +48,7 @@ var wordpress = {
 			return false;
 		}
 
-		// 'username', 'expiration', 'token', 'hmac', 'scheme'
+		// 'username', 'expiration', 'token', 'hmac'
 		parts = cookies[ 'wordpress_logged_in_' + this.cookie_hash ].split( '|' );
 
 		// Quick check to see if an honest cookie has expired
@@ -37,15 +56,12 @@ var wordpress = {
 			return false;
 		}
 
-		if( ! this.connector.parse_cookie( cookies ) ) {
-			return false;
+		return {
+			username: parts[0],
+			expiration: parts[1],
+			token: parts[2],
+			hmac: parts[3]
 		}
-
-		username   = parts[0];
-		expiration = parts[1];
-
-		return logged_in = true;
-
 	},
 
 	is_user_logged_in: function () {
