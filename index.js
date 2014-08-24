@@ -1,15 +1,11 @@
 var cookie = require("cookie"),
-    md5 = require('MD5');
+    md5 = require('MD5')
+    events = require('events');
 
 var wordpress = {
 	siteurl: '',
 	cookie_hash: '',
 	connector: require('./lib/wp-api.js'),
-
-	// Internal
-	logged_in: false,
-	username: false,
-	expiration: false,
 
 	set_siteurl: function ( siteurl ) {
 		this.siteurl = siteurl;
@@ -17,27 +13,23 @@ var wordpress = {
 		this.connector.set_siteurl( siteurl );
 	},
 
-	connect: function( cookie_data, token, callback ) {
+	connect: function( cookie_data, token ) {
 		var cookie_data = this.parse_cookie( cookie_data );
 
 		if ( ! cookie_data ) {
 			return false;
 		}
 
-		var success = this.connector.connect( cookie_data, token, callback );
+		var wp_user = new WP_User( cookie_data.username, cookie_data.expiration );
+
+		var success = this.connector.connect( cookie_data, token, wp_user );
 
 		// Some magic happens here
 		if( false === success ) {
 			return false;
 		}
 
-		this.username   = cookie_data.username;
-		this.expiration = cookie_data.expiration;
-		this.logged_in  = true;
-
-		if ( true === success ) {
-			return true;
-		}
+		return wp_user;
 	},
 
 	parse_cookie: function ( cookie_data ) {
@@ -75,5 +67,19 @@ var wordpress = {
 		return logged_in;
 	}
 };
+
+
+function WP_User( username, expiration ) {
+	this.username = username;
+	this.expiration = expiration;
+	this.logged_in = false;
+	this.user_object = false;
+
+	this.on('wp_connected', function ( data ) {
+		this.logged_in = true;
+		this.user_object = data;
+	});
+};
+require('util').inherits(WP_User, events.EventEmitter);
 
 module.exports = Object.create(wordpress);
