@@ -17,15 +17,17 @@ var wordpress = {
 		this.connector.set_siteurl( siteurl );
 	},
 
-	connect: function( cookie_data, token ) {
+	connect: function( cookie_data, token, callback ) {
 		var cookie_data = this.parse_cookie( cookie_data );
 
 		if ( ! cookie_data ) {
 			return false;
 		}
 
+		var success = this.connector.connect( cookie_data, token, callback );
+
 		// Some magic happens here
-		if( ! this.connector.connect( cookie_data, token ) ) {
+		if( false === success ) {
 			return false;
 		}
 
@@ -33,7 +35,9 @@ var wordpress = {
 		this.expiration = cookie_data.expiration;
 		this.logged_in  = true;
 
-		return true;
+		if ( true === success ) {
+			return true;
+		}
 	},
 
 	parse_cookie: function ( cookie_data ) {
