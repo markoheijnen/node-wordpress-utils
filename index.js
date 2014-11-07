@@ -9,7 +9,7 @@ var wordpress = {
 
 	set_siteurl: function ( siteurl ) {
 		this.siteurl = siteurl;
-		this.cookie_hash = md5( siteurl );
+		this.cookie_hash = md5( siteurl + '/' );
 		this.connector.set_siteurl( siteurl );
 	},
 
@@ -70,15 +70,27 @@ var wordpress = {
 
 
 function WP_User( username, expiration ) {
-	this.username = username;
-	this.expiration = expiration;
-	this.logged_in = false;
+	this.username    = username;
+	this.expiration  = expiration;
+	this.logged_in   = false;
 	this.user_object = false;
 
 	this.on('wp_connected', function ( data ) {
 		this.logged_in = true;
 		this.user_object = data;
-	});
+	}),
+
+	this.can = function ( capability ) {
+		if ( ! this.logged_in || ! this.user_object ) {
+			return false;
+		}
+
+		if ( this.user_object.capabilities[capability] !== undefined ) {
+			return this.user_object.capabilities[capability];
+		}
+
+		return false;
+	}
 };
 require('util').inherits(WP_User, events.EventEmitter);
 
