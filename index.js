@@ -9,8 +9,15 @@ var wordpress = {
 
 	set_siteurl: function ( siteurl ) {
 		this.siteurl = siteurl;
-		this.cookie_hash = md5( siteurl + '/' );
 		this.connector.set_siteurl( siteurl );
+
+		if ( ! this.cookie_hash ) {
+			this.set_cookie_hash( siteurl );
+		}
+	},
+
+	set_cookie_hash: function ( siteurl ) {
+		this.cookie_hash = md5( siteurl );
 	},
 
 	connect: function( cookie_data, token ) {
